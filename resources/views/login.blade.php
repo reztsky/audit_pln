@@ -18,23 +18,18 @@
             </div>
         @endif
 
-        @if($errors->any())
-            <div class="mb-4 text-red-600 text-sm">
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('auth') }}">
             @csrf
 
             <div class="mb-4">
                 <label for="username" class="block text-sm font-semibold mb-1">Username</label>
                 <input id="username" type="text" name="username" required autofocus
-                    class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 @error('username')
+                        ring-red-500
+                    @enderror">
+                @error('username')
+                    <p class="text-red-500 text-xs mt-2">{{$message}}</p>
+                @enderror
             </div>
 
             <div class="mb-6">

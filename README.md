@@ -1,7 +1,7 @@
 ## Tentang Aplication
 Aplikasi ini merupakan aplikasi yang digunakan dalam pengerjaan skripsi 
 
-## System Requirment
+## System Requirement
 - Laravel 12.x
 - PHP 8.3
 - Mysql 8
@@ -9,4 +9,4 @@ Aplikasi ini merupakan aplikasi yang digunakan dalam pengerjaan skripsi
 - Node JS
 
 ## Author
-Sultan Aulia Alfarizki [sultaninot@gmial.com](mailto:sultaninot@gmail.com)
+Sultan Aulia Alfarizki [sultaninot@gmail.com](mailto:sultaninot@gmail.com)
