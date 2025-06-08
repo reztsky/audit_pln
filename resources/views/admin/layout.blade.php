@@ -64,14 +64,25 @@
                 <ul class="menu w-full text-base-content gap-y-1 p-0 pt-5">
                     <!-- Sidebar content here -->
                     <li><a><x-heroicon-o-home class="w-5 h-5" /> <span> Dashboard </span></a></li>
-                    <li><a><x-heroicon-o-pencil-square class="w-5 h-5" /><span>Surat Tugas</span></a></li>
-                    <li><a href="{{ route('pegawai.index') }}"><x-heroicon-o-user-group
-                                class="w-5 h-5" /><span>Pegawai</span></a></li>
+                    <li><a href="{{ route('suratTugas.index') }}" class="@yield('surattugas-active')"><x-heroicon-o-pencil-square
+                                class="w-5 h-5" /><span>Surat Tugas</span></a></li>
+                    <li><a href="{{ route('pka.index') }}" class="@yield('pka-active')"><x-heroicon-o-document-text class="w-5 h-5"/><span>PKA</span></a></li>
+                    <li><a href="{{ route('kertasKerja.index') }}" class="@yield('kertaskerja-active')"><x-heroicon-o-paper-clip class="w-5 h-5"/><span>Kertas Kerja</span></a></li>
+                    <li>
+                        <h2 class="menu-title">Master</h2>
+                        <ul>
+                            <li><a href="{{ route('pegawai.index') }}"
+                                    class="@yield('pegawai-active')"><x-heroicon-o-user-group
+                                        class="w-5 h-5" /><span>Pegawai</span></a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
 </body>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 @stack('script')
+
 </html>

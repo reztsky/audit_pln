@@ -1,5 +1,6 @@
 @extends('admin.layout')
 @section('title', 'Pegawai')
+@section('pegawai-active','menu-active')
 @section('content')
     <div class="flex justify-end mb-5">
         <button class="btn btn-sm btn-accent" onclick="create.showModal()">Tambah</button>

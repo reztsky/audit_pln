@@ -18,4 +18,8 @@ class SuratTugas extends Model
         'lokasi_audit',
         'surat_tugas',
     ];
+
+    public function pegawai(){
+        return $this->belongsTo(Pegawai::class,'pic_id_pegawai','id');
+    }
 }
