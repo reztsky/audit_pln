@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DaftarHadirController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\KertasKerjaController;
+use App\Http\Controllers\Admin\LhaController;
 use App\Http\Controllers\Admin\PegawaiController;
 use App\Http\Controllers\Admin\PkaController;
 use App\Http\Controllers\Admin\SuratTugasController;
@@ -86,6 +87,18 @@ Route::group([
         'controller'=>KertasKerjaController::class,
         'prefix'=>'/kertas-kerja',
         'as'=>'kertasKerja.'
+    ],function(){
+        Route::get('/','index')->name('index');
+        Route::get('/create/{idpka}','create')->name('create');
+        Route::post('/store','store')->name('store');
+        Route::get('/show{idpka}','show')->name('show');
+        Route::get('/detail/{id}','detail')->name('detail');
+    });
+
+    Route::group([
+        'controller'=>LhaController::class,
+        'prefix'=>'/lha',
+        'as'=>'lha.'
     ],function(){
         Route::get('/','index')->name('index');
         Route::get('/create/{idpka}','create')->name('create');

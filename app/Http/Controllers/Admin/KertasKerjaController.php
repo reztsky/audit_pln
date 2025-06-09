@@ -6,13 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\KertasKerja\StoreKertasKerjaRequest;
 use App\Models\KertasKerja;
 use App\Models\Pka;
+use App\Models\SuratTugas;
 use Illuminate\Http\Request;
 
 class KertasKerjaController extends Controller
 {
     public function index()
     {
-        $pkas = Pka::with(['suratTugas','kertasKerja'])->paginate(10);
+        $pkas = Pka::with(['suratTugas'])->withCount('kertasKerja')->paginate(10);
         return view('admin.kertaskerja.index', compact('pkas'));
     }
 
@@ -33,6 +34,13 @@ class KertasKerjaController extends Controller
             return redirect()->route('kertasKerja.index')->with('notifikasi_sukses','Berhasil Menambahkan Data');
         }
         return redirect()->route('kertasKerja.index')->with('notifikasi_gagal','Gagal Menambahkan Data');
+    }
+
+    public function show($idpka){
+        $kertas_kerjas=KertasKerja::with('pka.suratTugas')->findByPka($idpka)->get();
+        return response()->json([
+            'data'=>$kertas_kerjas
+        ],200);
     }
 
     private function upload($file)

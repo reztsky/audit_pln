@@ -9,6 +9,12 @@ class KertasKerja extends Model
 {
     use SoftDeletes;
 
+    protected $casts=[
+        'tanggal'=>'date'
+    ];
+
+    protected $appends = ['tanggal_formatted'];
+    
     protected $fillable=[
         'inserted_by',
         'id_pka',
@@ -29,5 +35,13 @@ class KertasKerja extends Model
 
     public function lha(){
         // return $this->belongsTo(Pka::class,'id_pka','id');
+    }
+
+    public function scopeFindByPka($query,$idpka){
+        return $query->where('id_pka',$idpka);
+    }
+
+     public function getTanggalFormattedAttribute() {
+        return $this->tanggal->translatedFormat('d F Y');
     }
 }

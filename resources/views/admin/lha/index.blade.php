@@ -1,8 +1,8 @@
 @extends('admin.layout')
-@section('title', 'Kertas Kerja')
-@section('kertaskerja-active', 'menu-active')
+@section('title', 'Laporan Hasil Audit (LHA)')
+@section('lha-active', 'menu-active')
 @section('content')
-    @if ($errors->any())
+      @if ($errors->any())
         <div class="alert alert-error my-5">
             <x-heroicon-o-exclamation-triangle class="w-5 h-5" />
             <ul class="list-disc list-inside text-sm">
@@ -33,14 +33,10 @@
                             </p>
                         </td>
                         <td>
-                            @if ($pka->kertas_kerja_count >= 1)
-                                <button class="btn btn-sm btn-success btn-show-kertas-kerja" data-id="{{ $pka->id }}"
-                                    onclick="showKertasKerja.showModal()">Lihat Kertas Kerja</button>
+                            @if ($pka->lha_count>=1)
+                                <button class="btn btn-sm btn-lihat-lha btn-success">Lihat LHA</button>
                             @endif
-                            <a class="btn btn-sm btn-accent" href="{{ route('kertasKerja.create', $pka->id) }}">
-                                <x-heroicon-o-folder-plus class="w-5 h-5" />
-                                Create Kertas Kerja
-                            </a>
+                           <a href="{{ route('lha.create',$pka->id) }}" class="btn btn-sm btn-accent">Buat LHA</a>
                         </td>
                     </tr>
                 @empty
@@ -52,5 +48,4 @@
             {{ $pkas->links() }}
         </div>
     </div>
-    @include('admin.kertaskerja.show')
 @endsection

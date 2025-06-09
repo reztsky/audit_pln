@@ -14,7 +14,7 @@ class DaftarHadir extends Model
         'tanggal_meeting'=>'date'
     ];
 
-     protected $appends = ['tanggal_formatted'];
+    protected $appends = ['tanggal_formatted'];
     
     protected $fillable = [
         'inserted_by',
