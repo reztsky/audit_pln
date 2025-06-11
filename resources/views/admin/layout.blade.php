@@ -69,6 +69,7 @@
                     <li><a href="{{ route('pka.index') }}" class="@yield('pka-active')"><x-heroicon-o-document-text class="w-5 h-5"/><span>PKA</span></a></li>
                     <li><a href="{{ route('kertasKerja.index') }}" class="@yield('kertaskerja-active')"><x-heroicon-o-paper-clip class="w-5 h-5"/><span>Kertas Kerja</span></a></li>
                     <li><a href="{{ route('lha.index') }}" class="@yield('lha-active')"><x-heroicon-o-flag class="w-5 h-5"/><span>Laporan Hasil Audit (LHA)</span></a></li>
+                     <li><a href="{{ route('lhaReview.index') }}" class="@yield('lhareview-active')"><x-heroicon-o-presentation-chart-bar class="w-5 h-5"/><span>Review LHA</span></a></li>
                     <li>
                         <h2 class="menu-title">Master</h2>
                         <ul>

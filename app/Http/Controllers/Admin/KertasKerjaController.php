@@ -43,6 +43,11 @@ class KertasKerjaController extends Controller
         ],200);
     }
 
+    public function detail($id){
+        $kertas_kerja=KertasKerja::with(['pka.suratTugas','lha','user'])->findOrFail($id);
+        return view('admin.kertaskerja.detail',compact('kertas_kerja'));
+    }
+
     private function upload($file)
     {
         $filename = time() . '_' . $file->getClientOriginalName();

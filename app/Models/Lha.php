@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Lha extends Model
 {
     use SoftDeletes;
-    
+
     protected $fillable = [
         'inserted_by',
         'id_pka',
@@ -19,6 +19,10 @@ class Lha extends Model
         'tanggal_selesai',
     ];
 
+    public function LhaLog(){
+        return $this->hasMany(LhaLog::class,'lha_id','id');
+    }
+
     // Relasi ke PKA
     public function pka()
     {
@@ -26,7 +30,7 @@ class Lha extends Model
     }
 
     // Relasi ke User (pembuat laporan)
-    public function creator()
+    public function user()
     {
         return $this->belongsTo(User::class, 'inserted_by');
     }
@@ -34,12 +38,12 @@ class Lha extends Model
     // Relasi ke Kertas Kerja (jika setiap LHA punya banyak kertas kerja)
     public function kertasKerja()
     {
-        return $this->hasMany(KertasKerja::class, 'lha_id');
+        return $this->hasMany(KertasKerja::class, 'id_lha','id');
     }
 
     // Scope untuk status
     public function scopeStatus($query, $status)
     {
-        return $query->where('status', $status);
+        return $query->whereIn('status', $status);
     }
 }

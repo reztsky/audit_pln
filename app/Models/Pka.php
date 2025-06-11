@@ -37,7 +37,7 @@ class Pka extends Model
     }
 
     public function lha(){
-        return $this->hasMany(Lha::class,'id_pka','id');
+        return $this->hasOne(Lha::class,'id_pka','id');
     }
 
 }
