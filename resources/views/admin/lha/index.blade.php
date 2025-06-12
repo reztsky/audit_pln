@@ -35,7 +35,8 @@
                                         {{ $pka->surattugas->tanggal_audit->translatedFormat('d F Y') }}
                                     </p>
                                 </div>
-                                <div class="badge badge-neutral">{{ $pka->lha->status }}</div>
+                                <div class="badge badge-neutral">  {{ $pka->lha->status }}</div>
+
                             </div>
                         </td>
                         <td>

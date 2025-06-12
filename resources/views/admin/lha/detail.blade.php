@@ -61,7 +61,7 @@
                         <div class="text-sm text-gray-600 leading-relaxed" id="text-catatan-revisi-lha"></div>
                     </li>
                 </ul>
-                <div class="flex justify-end mt-3 space-x-1.5">
+                <div class="flex justify-end my-3 space-x-1.5">
                     <div id="container-btn-edit">
                         <a class="btn btn-sm btn-warning" id="btn-edit">Edit</a>
                     </div>

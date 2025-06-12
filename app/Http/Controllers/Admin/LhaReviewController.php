@@ -12,7 +12,7 @@ class LhaReviewController extends Controller
 {
     public function index()
     {
-        $lhas = Lha::with(['LhaLog', 'user'])->status(['diajukan'])->paginate(10);
+        $lhas = Lha::with(['LhaLog', 'user'])->paginate(10);
         return view('admin.lhareview.index', compact('lhas'));
     }
 

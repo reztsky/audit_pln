@@ -18,7 +18,7 @@ class KertasKerja extends Model
     protected $fillable = [
         'inserted_by',
         'id_pka',
-        'id_lha',
+        'kategori_temuan',
         'kontrol',
         'unit',
         'bidang',

@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('lhas', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('inserted_by');
-            $table->bigInteger('id_pka');
-            $table->string('judul');
-            $table->longText('ringkasan')->nullable();
-            $table->enum('status', [
+            $table->json('id_kertas_kerja');
+            $table->enum('action', [
                 'draft',
                 'diajukan',
                 'revisi',
@@ -25,9 +23,7 @@ return new class extends Migration
                 'ditindaklanjuti',
                 'tindaklanjut_ok',
                 'selesai'
-            ])->default('draft');
-            $table->text('komentar')->nullable();
-            $table->date('tanggal_selesai')->nullable();
+            ]);
             $table->softDeletes();
             $table->timestamps();
         });

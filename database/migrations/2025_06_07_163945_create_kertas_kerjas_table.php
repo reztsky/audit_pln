@@ -15,12 +15,17 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('inserted_by');
             $table->bigInteger('id_pka');
-            $table->bigInteger('id_lha')->nullable();
             $table->string('kontrol');
             $table->string('unit');
             $table->string('bidang');
             $table->date('tanggal');
-            $table->longText('temuan');
+            $table->enum('kategori_temuan', [
+                'Major',
+                'Minor',
+                'Ofi',
+                'Sesuai'
+            ]);
+            $table->longText('temuan')->nullable();
             $table->longText('ofi')->nullable();
             $table->longText('keterangan_tambahan')->nullable();
             $table->string('dokumen_dukung')->nullable();

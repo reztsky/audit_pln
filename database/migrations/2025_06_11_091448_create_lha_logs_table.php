@@ -25,7 +25,6 @@ return new class extends Migration
                 'selesai'
             ]);
             $table->text('catatan')->nullable();            // alasan revisi, catatan tambahan, dll
-
             $table->foreign('lha_id')->references('id')->on('lhas')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
