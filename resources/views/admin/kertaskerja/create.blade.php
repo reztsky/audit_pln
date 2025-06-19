@@ -26,28 +26,28 @@
                             </div>
                             <div class="md:w-10/12 w-12/12">
                                 <input type="text" id="kontrol" name="kontrol"
-                                    class="input input-ghost w-full input-xs border-b-2 border-b-gray-500" placeholder="Kontrol">
+                                    class="input input-ghost w-full input-xs border-b-2 border-b-gray-500"
+                                    placeholder="Kontrol">
                             </div>
                             <div class="md:w-2/12 w-12/12">
-                                <label for="unit" class="font-semibold">Unit</label>
-                            </div>
-                            <div class="md:w-10/12 w-12/12">
-                                <input type="text" id="unit" name="unit"
-                                    class="input input-ghost w-full input-xs  border-b-2 border-b-gray-500" placeholder="Unit">
-                            </div>
-                            <div class="md:w-2/12 w-12/12">
-                                <label for="bidang" class="font-semibold">Bidang</label>
-                            </div>
-                            <div class="md:w-10/12 w-12/12">
-                                <input type="text" id="bidang" name="bidang"
-                                    class="input input-ghost w-full input-xs border-b-2 border-b-gray-500" placeholder="Bidang">
-                            </div>
-                            <div class="md:w-2/12 w-12/12">
-                                <label for="tanggal" class="font-semibold">tanggal</label>
+                                <label for="tanggal" class="font-semibold">Tanggal</label>
                             </div>
                             <div class="md:w-10/12 w-12/12">
                                 <input type="date" id="tanggal" name="tanggal"
-                                    class="input input-ghost w-full input-xs  border-b-2 border-b-gray-500" placeholder="tanggal">
+                                    class="input input-ghost w-full input-xs  border-b-2 border-b-gray-500"
+                                    placeholder="tanggal">
+                            </div>
+                            <div class="md:w-2/12 w-12/12">
+                                <label for="tanggal" class="font-semibold">Kategori Temuan</label>
+                            </div>
+                            <div class="md:w-10/12 w-12/12">
+                                <select name="kategori_temuan" id="" class="select w-full select-sm">
+                                    <option disabled selected>Kategori Temuan</option>
+                                    <option value="Major">Major</option>
+                                    <option value="Minor">Minor</option>
+                                    <option value="Ofi">OFI</option>
+                                    <option value="Sesuai">Sesuai</option>
+                                </select>
                             </div>
                             <div class="w-12/12">
                                 <p class="font-semibold mb-2 p-0">Temuan</p>

@@ -20,8 +20,6 @@ class KertasKerja extends Model
         'id_pka',
         'kategori_temuan',
         'kontrol',
-        'unit',
-        'bidang',
         'tanggal',
         'temuan',
         'ofi',

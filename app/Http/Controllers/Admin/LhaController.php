@@ -17,7 +17,7 @@ class LhaController extends Controller
 {
     public function index()
     {
-        $pkas = Pka::with(['suratTugas', 'lha'])->withCount('lha')->paginate(10);
+        $pkas = Pka::with(['suratTugas'])->paginate(10);
         return view('admin.lha.index', compact('pkas'));
     }
 

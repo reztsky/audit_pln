@@ -33,14 +33,8 @@
                             </p>
                         </td>
                         <td>
-                            @if ($pka->kertas_kerja_count >= 1)
-                                <button class="btn btn-sm btn-success btn-show-kertas-kerja" data-id="{{ $pka->id }}"
-                                    onclick="showKertasKerja.showModal()">Lihat Kertas Kerja</button>
-                            @endif
-                            <a class="btn btn-sm btn-accent" href="{{ route('kertasKerja.create', $pka->id) }}">
-                                <x-heroicon-o-folder-plus class="w-5 h-5" />
-                                Create Kertas Kerja
-                            </a>
+                            <button class="btn btn-sm btn-success btn-show-kertas-kerja" data-id="{{ $pka->id }}"
+                                onclick="showKertasKerja.showModal()">Lihat Kertas Kerja</button>
                         </td>
                     </tr>
                 @empty

@@ -35,16 +35,10 @@
                                         {{ $pka->surattugas->tanggal_audit->translatedFormat('d F Y') }}
                                     </p>
                                 </div>
-                                <div class="badge badge-neutral">  {{ $pka->lha->status }}</div>
-
                             </div>
                         </td>
                         <td>
-                            @if ($pka->lha_count >= 1)
-                                <label class="btn btn-sm btn-lihat-lha btn-success" for="detail-drawer"
-                                    data-id="{{ $pka->lha->id }}">Lihat LHA</label>
-                            @endif
-                            <a href="{{ route('lha.create', $pka->id) }}" class="btn btn-sm btn-accent">Buat LHA</a>
+                            <label class="btn btn-primary btn-sm" for="detail-drawer"><x-heroicon-o-eye class="w-4 h-4"/>LHA</label>
                         </td>
                     </tr>
                 @empty
@@ -57,5 +51,4 @@
         </div>
     </div>
     @include('admin.lha.detail')
-
 @endsection

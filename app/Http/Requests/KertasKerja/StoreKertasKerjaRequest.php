@@ -4,6 +4,7 @@ namespace App\Http\Requests\KertasKerja;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class StoreKertasKerjaRequest extends FormRequest
 {
@@ -26,8 +27,7 @@ class StoreKertasKerjaRequest extends FormRequest
             'inserted_by'=>'required|numeric|exists:users,id',
             'id_pka'=>'required|numeric|exists:pkas,id',
             'kontrol'=>'required',
-            'unit'=>'required',
-            'bidang'=>'required',
+            'kategori_temuan'=>['required',Rule::in(['Major','Minor','Ofi','Sesuai'])],
             'tanggal'=>'required|date|before:tomorrow',
             'temuan'=>'required',
             'ofi'=>'nullable',

@@ -10,7 +10,7 @@
                 <thead>
                     <tr>
                         <th>Kontrol</th>
-                        <th>Unit/Bidang</th>
+                        <th>Kategori Temuan</th>
                         <th>Tanggal</th>
                         <th>Temuan</th>
                         <th></th>
@@ -34,8 +34,14 @@
                 </tbody>
                 <tbody id="kertas-kerja-tbody" class="hidden">
 
-                </tbody>    
+                </tbody>
             </table>
+            <div class="flex justify-center">
+                <a class="btn btn-sm btn-accent" id="btn-create" href="{{ route('kertasKerja.create', $pka->id) }}">
+                    <x-heroicon-o-folder-plus class="w-5 h-5" />
+                    Tambah Kertas Kerja
+                </a>
+            </div>
         </div>
     </div>
 </dialog>
@@ -43,19 +49,20 @@
     <script>
         function setTbodyKertasKerja(data) {
             var tbody = ``
+            if (data.length < 1) return tbody = `<tr><td colspan="9" class="text-center">No Found Record</td></tr>`;
             data.forEach(row => {
                 var url = "{{ route('kertasKerja.detail', ':id') }}"
                 url = url.replace(':id', row.id)
                 tbody += `<tr>
                         <td>${row.kontrol}</td>
-                        <td>${row.unit} / ${row.bidang}</td>
+                        <td>${row.kategori_temuan}</td>
                         <td>${row.tanggal_formatted}</td>
                         <td>
                             <p class="line-clamp-2">${row.temuan}</p>
                         </td>
                         <td>
                             <div class="space-y-2">
-                            <a class="btn btn-accent btn-xs" href="${url}">Detail</a>
+                            <a class="btn btn-accent btn-xs mb-0" href="${url}">Detail</a>
                             <button class="btn btn-error btn-xs btn-delete-kertas-kerja">Hapus</button>
                             </div>
                         </td>
@@ -66,6 +73,11 @@
 
         $('.btn-show-kertas-kerja').on('click', function() {
             var id_pka = $(this).data('id')
+
+            var url_btn_create="{{ route('kertasKerja.create', ':idpka') }}"
+            url_btn_create=url_btn_create.replace(':idpka',id_pka)
+            $('#btn-create').attr('href',url_btn_create)
+
             var url = "{{ route('kertasKerja.show', ':idpka') }}"
             url = url.replace(':idpka', id_pka)
 

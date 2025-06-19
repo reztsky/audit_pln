@@ -92,7 +92,7 @@ Route::group([
         Route::get('/', 'index')->name('index');
         Route::get('/create/{idpka}', 'create')->name('create');
         Route::post('/store', 'store')->name('store');
-        Route::get('/show{idpka}', 'show')->name('show');
+        Route::get('/show/{idpka}', 'show')->name('show');
         Route::get('/detail/{id}', 'detail')->name('detail');
     });
 

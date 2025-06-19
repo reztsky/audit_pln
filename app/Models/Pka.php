@@ -36,8 +36,4 @@ class Pka extends Model
         return $this->hasMany(KertasKerja::class,'id_pka','id');
     }
 
-    public function lha(){
-        return $this->hasOne(Lha::class,'id_pka','id');
-    }
-
 }

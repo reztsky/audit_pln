@@ -16,8 +16,6 @@ return new class extends Migration
             $table->bigInteger('inserted_by');
             $table->bigInteger('id_pka');
             $table->string('kontrol');
-            $table->string('unit');
-            $table->string('bidang');
             $table->date('tanggal');
             $table->enum('kategori_temuan', [
                 'Major',

@@ -22,7 +22,7 @@
         </div>
 
         <div class="min-h-full bg-white">
-            <div id="content-detail" class="bg-white hidden min-h-full w-[40vw] px-5 ">
+            <div id="content-detail" class="bg-white  min-h-full md:w-[40vw] w-full px-5 ">
                 <div class="text-center mb-6 mt-8 p-2">
                     <h3
                         class="text-lg sm:text-xl md:text-2xl font-extrabold text-primary uppercase tracking-wide inline-flex flex-wrap justify-center items-center gap-2 text-center">
@@ -79,93 +79,6 @@
 
 @push('script')
     <script>
-        function setBadge(status) {
-            var class_status = {
-                'draft': 'badge-neutral',
-                'diajukan': 'badge-primary',
-                'revisi': 'badge-secondary',
-                'disetujui': 'badge-accent',
-                'ditindaklanjuti': 'badge-info',
-                'tindaklanjut_ok': 'badge-success',
-                'selesai': 'badge-warning'
-            }
-            // Hapus class badge-* sebelumnya (opsional)
-            $('#text-status-lha').removeClass(function(index, className) {
-                return (className.match(/(^|\s)badge-\S+/g) || []).join(' ');
-            });
 
-            // Tambahkan class baru dan update text
-            $('#text-status-lha')
-                .html(status)
-                .addClass(class_status[status] || 'badge-neutral');
-        }
-
-        function setLogLha(logs) {
-            var ul = `<ul class="list-disc ml-6">`
-            logs.forEach(row => {
-                ul +=
-                    `<li>
-                        <strong>${row.action}</strong> Oleh ${row.user.name} <span class="text-sm text-gray-500"> ${row.formated_date}</span>
-                        <div class="text-sm mt-1">${row.catatan ?? '-'}</div>
-                    </li>`
-            });
-            ul += `</ul>`
-            $('#text-catatan-revisi-lha').html(ul)
-        }
-
-        function setLhaDetail(data) {
-            var ul = `<ul class="list-disc ml-6">`
-            data.kertas_kerja.forEach(row => {
-                var shortText = row.temuan.slice(0, 50) + " ..."
-                var urlkertas_kerja = "{{ route('kertasKerja.detail', ':id') }}"
-                urlkertas_kerja = urlkertas_kerja.replace(':id', row.id)
-                ul +=
-                    `<li>${ row.kontrol } - ${ shortText ?? '-' } <a class="underline text-blue-400 cursor-pointer" href="${urlkertas_kerja}">Read More</a></li>`
-            });
-            ul += `</ul>`
-
-            $('#title-judul-audit').html(data.pka.surat_tugas.judul_audit)
-            $('#title-lokasi-audit').html(data.pka.surat_tugas.lokasi_audit)
-            $('#text-judul-lha').html(data.judul)
-            $('#text-tanggal-lha').html(data.tanggal)
-            $('#text-ringkasan-lha').html(data.ringkasan)
-            $('#text-list-kertas-kerja').html(ul)
-            setBadge(data.status)
-            setLogLha(data.lha_log)
-
-
-            var url_submit = "{{ route('lha.submitKeAtasan', ':id') }}"
-            url_submit = url_submit.replace(':id', data.id)
-            $('#form-submit-keatasan').attr('action', url_submit)
-
-            if (data.status == 'draft' || data.status == 'revisi') {
-                $('#btn-submit-keatasan').show()
-            } else {
-                $('#btn-submit-keatasan').hide()
-            }
-
-            var url_edit = "{{ route('lha.edit', ':id') }}"
-            url_edit = url_edit.replace(':id', data.id)
-            $('#btn-edit').attr('href', url_edit)
-        }
-
-        $('.btn-lihat-lha').on('click', function() {
-            var id = $(this).data('id')
-            var url = "{{ route('lha.detail', ':id') }}"
-            url = url.replace(':id', id)
-            $.ajax({
-                url: url,
-                beforeSend: function() {
-                    $('#detail-skeleton').show();
-                    $('#content-detail').hide();
-                },
-                success: function(resp) {
-                    $('#detail-skeleton').hide();
-                    $('#content-detail').show();
-                    var data = resp.data
-                    setLhaDetail(data)
-                }
-            })
-        })
     </script>
 @endpush
