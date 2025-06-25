@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\KertasKerja;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
-class StoreLhaRequest extends FormRequest
+class UpdateKertasKerjaRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,14 +21,18 @@ class StoreLhaRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-
     public function rules(): array
     {
         return [
             'inserted_by'=>'required|numeric|exists:users,id',
-            'id_kertas_kerja'=>'required|array|min:1',
-            'id_kertas_kerja.*'=>'required|numeric|exists:kertas_kerjas,id',
-            'action'=>'required'
+            'id_pka'=>'required|numeric|exists:pkas,id',
+            'kontrol'=>'required',
+            'kategori_temuan'=>['required',Rule::in(['Major','Minor','Ofi','Sesuai'])],
+            'tanggal'=>'required|date|before:tomorrow',
+            'temuan'=>'required',
+            'ofi'=>'nullable',
+            'keterangan_tambahan'=>'nullable',
+            'dokumen_dukung'=>'nullable|file|max:10240|mimes:pdf,doc,docx',
         ];
     }
 
@@ -35,7 +40,6 @@ class StoreLhaRequest extends FormRequest
     {
         $this->merge([
             'inserted_by'=>Auth::user()->id,
-            'action'=>'diajukan'
         ]);
     }
 }

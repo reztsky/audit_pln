@@ -1,6 +1,8 @@
 @extends('admin.layout')
-@section('title', 'Laporan Hasil Audit (LHA)')
-@section('lha-active', 'menu-active')
+@push('style')
+@endpush
+@section('title', 'Tindak Lanjut')
+@section('tindaklanjut-active', 'menu-active')
 @section('content')
     @if ($errors->any())
         <div class="alert alert-error my-5">
@@ -14,6 +16,7 @@
     @endif
     <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
         <table class="table">
+            <!-- head -->
             <thead>
                 <tr>
                     <th></th>
@@ -30,7 +33,7 @@
                                 <div>
                                     <p class="text-slate-800"><span
                                             class="font-bold">{{ $pka->surattugas->judul_audit }}</span> -
-                                        {{ $pka->surattugas->lokasi_audit }}  -  {{$pka->kertasKerja->first()->lha?->action}}</p>
+                                        {{ $pka->surattugas->lokasi_audit }}
                                     <p class="text-slate-500 text-xs">
                                         {{ $pka->surattugas->tanggal_audit->translatedFormat('d F Y') }}
                                     </p>
@@ -38,21 +41,24 @@
                             </div>
                         </td>
                         <td>
-                            @if ($pka->kertasKerja->first()->id_lha!=null)
-                            <a class="btn btn-primary btn-sm" href="{{route("lha.review",$pka->id)}}"><x-heroicon-o-eye class="w-4 h-4"/>LHA</a>
-                            @else
-                                LHA Belum Ditambahkan
-                            @endif
+                            <a class="btn btn-primary btn-sm" href="{{ route('lha.review', $pka->id) }}"><x-heroicon-o-eye
+                                    class="w-4 h-4" />LHA</a>
+
+                            <a href="{{ route('tindakLanjut.create', $pka->kertasKerja->first()->id_lha) }}" class="btn btn-sm ">Tindak Lanjut</a>
+
+
+                            <a href="{{route('tindakLanjut.reviewTindakLanjut',$pka->kertasKerja->first()?->lha->tindakLanjutLha->id)}}" class="btn btn-sm btn-neutral">Review Tindak Lanjut</a>
                         </td>
                     </tr>
                 @empty
                 @endforelse
             </tbody>
         </table>
-
         <div class="my-4 px-3">
             {{ $pkas->links() }}
         </div>
     </div>
-    @include('admin.lha.detail')
+
 @endsection
+@push('script')
+@endpush

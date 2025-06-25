@@ -27,10 +27,11 @@
                         <td>{{ $pkas->firstItem() + $loop->index }}</td>
                         <td>
                             <p class="text-slate-800"><span class="font-bold">{{ $pka->surattugas->judul_audit }}</span> -
-                                {{ $pka->surattugas->lokasi_audit }}</p>
+                                {{ $pka->surattugas->lokasi_audit }} - {{$pka->kertasKerja->first()->lha?->action}}</p>
                             <p class="text-slate-500 text-xs">
                                 {{ $pka->surattugas->tanggal_audit->translatedFormat('d F Y') }}
                             </p>
+
                         </td>
                         <td>
                             <button class="btn btn-sm btn-success btn-show-kertas-kerja" data-id="{{ $pka->id }}"

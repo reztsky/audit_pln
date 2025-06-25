@@ -17,42 +17,21 @@
                     <p>{{ $kertas_kerja->pka->suratTugas->tanggal_audit->translatedFormat('d F Y') ?? '-' }} </p>
                 </div>
 
-                {{-- LHA --}}
-                <div>
-                    <span class="text-sm text-gray-500">LHA Terkait</span>
-                    <p>
-                        @if ($kertas_kerja->lha)
-                            <a href="{{ route('lha.show', $kertas_kerja->lha->id) }}" class="link link-primary">
-                                {{ $kertas_kerja->lha->judul }}
-                            </a>
-                        @else
-                            <span class="text-gray-400">Belum ditugaskan</span>
-                        @endif
-                    </p>
-                </div>
-
                 {{-- Kontrol --}}
                 <div>
                     <span class="text-sm text-gray-500">Kontrol / Prosedur</span>
                     <p>{{ $kertas_kerja->kontrol }}</p>
                 </div>
 
-                {{-- Unit --}}
-                <div>
-                    <span class="text-sm text-gray-500">Unit</span>
-                    <p>{{ $kertas_kerja->unit }}</p>
-                </div>
-
-                {{-- Bidang --}}
-                <div>
-                    <span class="text-sm text-gray-500">Bidang</span>
-                    <p>{{ $kertas_kerja->bidang }}</p>
-                </div>
-
                 {{-- Tanggal --}}
                 <div>
                     <span class="text-sm text-gray-500">Tanggal</span>
                     <p>{{ \Carbon\Carbon::parse($kertas_kerja->tanggal)->format('d M Y') }}</p>
+                </div>
+
+                <div>
+                    <span class="text-sm text-gray-500">Ketegori Temuan</span>
+                    <p>{{ $kertas_kerja->kategori_temuan }}</p>
                 </div>
 
                 {{-- Temuan --}}
@@ -93,7 +72,7 @@
                 </div>
 
                 <div class="pt-6">
-                    <a href="{{ redirect()->back() }}" class="btn btn-neutral">
+                    <a href="{{ route('kertasKerja.index') }}" class="btn btn-neutral">
                         ← Kembali ke Daftar
                     </a>
                 </div>

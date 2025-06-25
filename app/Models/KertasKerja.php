@@ -18,6 +18,7 @@ class KertasKerja extends Model
     protected $fillable = [
         'inserted_by',
         'id_pka',
+        'id_lha',
         'kategori_temuan',
         'kontrol',
         'tanggal',
@@ -37,9 +38,16 @@ class KertasKerja extends Model
         return $this->belongsTo(Pka::class, 'id_pka', 'id');
     }
 
-    public function lha()
-    {
-        return $this->belongsTo(Lha::class, 'id_lha', 'id');
+    public function lha(){
+        return $this->belongsTo(Lha::class,'id_lha','id');
+    }
+
+    public function scopeFindByLha($query,$id_lha){
+        return $query->where('id_lha',$id_lha);
+    }
+
+    public function scopeLhaNotNull($query){
+        return $query->whereNotNull('id_lha');
     }
 
     public function scopeFindByPka($query, $idpka)

@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\PkaController;
 use App\Http\Controllers\Admin\SuratTugasController;
 use App\Http\Controllers\Admin\TimAuditController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\TindakLanjutLhaController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -94,6 +95,8 @@ Route::group([
         Route::post('/store', 'store')->name('store');
         Route::get('/show/{idpka}', 'show')->name('show');
         Route::get('/detail/{id}', 'detail')->name('detail');
+        Route::get('/edit/{id}','edit')->name('edit');
+        Route::post('/update/{id}','update')->name('update');
     });
 
     Route::group([
@@ -109,6 +112,8 @@ Route::group([
         Route::post('/submit-keatasan/{id}', 'submitKeAtasan')->name('submitKeAtasan');
         Route::get('/edit/{id}','edit')->name('edit');
         Route::post('/update/{id}','update')->name('update');
+        Route::get('/review/{idpka}','review')->name('review');
+        Route::post('/review/acc-atasan','accAtasan')->name('accAtasan');
     });
 
     Route::group([
@@ -119,5 +124,18 @@ Route::group([
         Route::get('/', 'index')->name('index');
         Route::get('/{id}', [LhaReviewController::class, 'show'])->name('show');
         Route::post('/{id}/submit', [LhaReviewController::class, 'submitReview'])->name('submit');
+    });
+
+    Route::group([
+        'controller'=>TindakLanjutLhaController::class,
+        'prefix'=>'/tindak-lanjut-lha',
+        'as'=>'tindakLanjut.'
+    ],function(){
+        Route::get('/','index')->name('index');
+        Route::get('/create/{id_lha}','create')->name('create');
+        Route::post('/store','store')->name('store');
+        Route::post('/update/{id}','update')->name('update');
+        Route::get('/submit-keatasan/{id}','submitKeatasan')->name('submitKeatasan');
+        Route::get('/review-tindaklanjut/{id}','reviewTindakLanjut')->name('reviewTindakLanjut');
     });
 });

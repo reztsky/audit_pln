@@ -23,6 +23,10 @@ class Lha extends Model
         return $this->hasMany(LhaLog::class,'lha_id','id');
     }
 
+    public function tindakLanjutLha(){
+        return $this->hasOne(TindakLanjutLha::class,'id_lha','id');
+    }
+
     // Relasi ke User (pembuat laporan)
     public function user()
     {
@@ -32,7 +36,7 @@ class Lha extends Model
     // Relasi ke Kertas Kerja (jika setiap LHA punya banyak kertas kerja)
     public function kertasKerja()
     {
-        return KertasKerja::whereIn('id', $this->item_ids ?? []);
+        return $this->hasMany(KertasKerja::class,'id_lha','id');
     }
 
     // Scope untuk status
