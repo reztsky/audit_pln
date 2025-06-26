@@ -16,7 +16,7 @@ class TindakLanjutLhaController extends Controller
     public function index()
     {
         $pkas = Pka::with(['suratTugas', 'kertasKerja', 'kertasKerja.lha.tindakLanjutLha'])->whereHas('kertasKerja.lha', function ($q) {
-            return $q->whereAction('disetujui');
+            return $q->whereIn('action',['disetujui','ditindaklanjuti','revisi_tindaklanjut','tindaklanjut_ok']);
         })->paginate(10);
         return view('admin.tindaklanjut.index', compact('pkas'));
     }
@@ -47,9 +47,13 @@ class TindakLanjutLhaController extends Controller
             'status' => 'draft'
         ]);
 
+        $lha = Lha::where('lha_id', $request->id_lha)->update([
+            'action'=>'ditindaklanjuti'
+        ]);
+
         $log_lha = LhaLog::create([
             'lha_id' => $request->id_lha,
-            'insertedt_by' => Auth::user()->id,
+            'inserted_by' => Auth::user()->id,
             'action' => 'ditindaklanjuti',
         ]);
 
@@ -101,8 +105,37 @@ class TindakLanjutLhaController extends Controller
     }
 
     public function reviewTindakLanjut($id){
-        $tindak_lanjut_lha=TindakLanjutLha::with([''])->findOrFail($id);
+        $tindak_lanjut_lha=TindakLanjutLha::with(['lha','lha.kertasKerja.pka.suratTugas'])->findOrFail($id);
         return view('admin.tindaklanjut.review',compact('tindak_lanjut_lha'));
+    }
+
+    public function submitReview(Request $request){
+        $request->validate([
+            'id_tindak_lanjut'=>'required|numeric|exists:tindak_lanjut_lhas,id',
+            'status'=>'required',
+            'catatan'=>'nullable'
+        ]);
+
+        $tindak_lanjut_lha=TindakLanjutLha::findOrFail($request->id_tindak_lanjut);
+        $tindak_lanjut_lha->status=$request->status;
+        $tindak_lanjut_lha->save();
+
+        $lhaLog=LhaLog::create([
+            'lha_id'=>$tindak_lanjut_lha->id_lha,
+            'inserted_by'=>Auth::user()->id,
+            'action'=>$request->status=='revisi' ? 'revisi_tindaklanjut' : 'tindaklanjut_ok',
+            'catatan'=>$request->catatan,
+        ]);
+
+        $lha=Lha::whereId($tindak_lanjut_lha->id_lha)->update([
+            'action'=>$request->status=='revisi' ? 'revisi_tindaklanjut' : 'tindaklanjut_ok'
+        ]);
+
+        if ($tindak_lanjut_lha) {
+            return redirect()->route('tindakLanjut.index')->with('notifikasi_sukses', 'Berhasil Mengirim Keatasan');
+        }
+        return redirect()->route('tindakLanjut.index')->with('notifikasi_gagal', 'Gagal Mengirim Keatasan');
+
     }
 
 

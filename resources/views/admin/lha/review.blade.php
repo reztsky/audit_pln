@@ -89,7 +89,7 @@
         @empty
         @endforelse
     </div>
-    @if ($kertas_kerjas->first()?->lha?->action != 'disetujui')
+    @if (in_array($kertas_kerjas->first()?->lha?->action,['draft','diajukan','revisi']))
         <div class="flex flex-row flex-wrap gap-3">
             <div class="card-body">
                 <form method="POST" action="{{ route('lha.accAtasan') }}">

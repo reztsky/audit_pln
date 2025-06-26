@@ -21,6 +21,7 @@ return new class extends Migration
                 'revisi',
                 'disetujui',
                 'ditindaklanjuti',
+                'revisi_tindaklanjut',
                 'tindaklanjut_ok',
                 'selesai'
             ]);

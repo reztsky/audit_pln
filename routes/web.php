@@ -137,5 +137,6 @@ Route::group([
         Route::post('/update/{id}','update')->name('update');
         Route::get('/submit-keatasan/{id}','submitKeatasan')->name('submitKeatasan');
         Route::get('/review-tindaklanjut/{id}','reviewTindakLanjut')->name('reviewTindakLanjut');
+        Route::post('/submit-review','submitReview')->name('submitReview');
     });
 });

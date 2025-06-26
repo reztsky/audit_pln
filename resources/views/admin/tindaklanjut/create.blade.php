@@ -6,8 +6,8 @@
 @section('content')
 
     @php
-        $is_ada_tindak_lanjut=$kertas_kerjas->first()?->lha->tindakLanjutLha?->count() > 0;
-        $id_tindak_lanjut=$kertas_kerjas->first()?->lha->tindakLanjutLha?->id;
+        $is_ada_tindak_lanjut = $kertas_kerjas->first()?->lha->tindakLanjutLha?->count() > 0;
+        $id_tindak_lanjut = $kertas_kerjas->first()?->lha->tindakLanjutLha?->id ?? 0;
     @endphp
 
     @if ($errors->any())
@@ -91,40 +91,50 @@
                     @endforelse
                 </div>
                 <div class="w-7/12">
-                    <form method="POST" action="{{ $is_ada_tindak_lanjut ?  route('tindakLanjut.update',$kertas_kerjas->first()?->lha->tindakLanjutLha?->id) : route('tindakLanjut.store')  }}" enctype="multipart/form-data">
+                    <form method="POST"
+                        action="{{ $is_ada_tindak_lanjut ? route('tindakLanjut.update', $kertas_kerjas->first()?->lha->tindakLanjutLha?->id) : route('tindakLanjut.store') }}"
+                        enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="id_lha" value="{{ $kertas_kerjas->first()?->id_lha }}">
 
-                        <div class="badge badge-outline badge-primary">{{$kertas_kerjas->first()?->lha->tindakLanjutLha?->status}}</div>
+                        @if ($is_ada_tindak_lanjut)
+                            <div class="badge badge-outline badge-primary">
+                                {{ $kertas_kerjas->first()?->lha->tindakLanjutLha?->status }}</div>
+                        @endif
 
                         <fieldset class="fieldset w-full">
                             <legend class="fieldset-legend text-base">Penjelasan Tindak Lanjut</legend>
-                            <textarea name="tindak_lanjut" id="" class="textarea h-64 w-full required" required
-                                placeholder="Penjelasan Tindak Lanjut">{{$kertas_kerjas->first()?->lha->tindakLanjutLha?->tindak_lanjut ?? ''}}</textarea>
+                            <textarea name="tindak_lanjut" id=""
+                                {{ in_array($kertas_kerjas->first()?->lha->tindakLanjutLha?->status, ['diajukan', 'disetujui']) ? 'readonly' : '' }}
+                                class="textarea h-64 w-full required" required placeholder="Penjelasan Tindak Lanjut">{{ $kertas_kerjas->first()?->lha->tindakLanjutLha?->tindak_lanjut ?? '' }}</textarea>
                         </fieldset>
                         <fieldset class="fieldset w-full">
                             <legend class="fieldset-legend text-base">Upload Bukti Dukung Perbaikan</legend>
-                            <input type="file" class="file-input w-full required" required name="eviden_path" />
+                            <input type="file" class="file-input w-full required" required name="eviden_path"
+                                {{ in_array($kertas_kerjas->first()?->lha->tindakLanjutLha?->status, ['diajukan', 'disetujui']) ? 'disabled' : '' }} />
                             <label class="label">Max size 2MB</label>
                             <label class="label">Jenis File .jpg / .jpeg / .pdf</label>
                         </fieldset>
-                        <a href="{{asset('storage/tindak_lanjut/'.$kertas_kerjas->first()?->lha->tindakLanjutLha?->eviden_path)}}" class="link-accent underline">
-                        {{$kertas_kerjas->first()?->lha->tindakLanjutLha?->eviden_path ? 'Lihat Dokumen' : ''}}
+                        <a href="{{ asset('storage/tindak_lanjut/' . $kertas_kerjas->first()?->lha->tindakLanjutLha?->eviden_path) }}"
+                            class="link-accent underline">
+                            {{ $kertas_kerjas->first()?->lha->tindakLanjutLha?->eviden_path ? 'Lihat Dokumen' : '' }}
                         </a>
 
                         @if ($is_ada_tindak_lanjut)
-                            <div class="flex flex-row justify-end space-x-2">
-                                @if ($kertas_kerjas->first()?->lha->tindakLanjutLha?->status=='diajukan')
-
-                                @else
-                                    <button type="submit" class="btn btn-primary btn-sm">Update</button>
-                                @endif
-                                @if ($kertas_kerjas->first()?->lha->tindakLanjutLha?->status!='diajukan')
-                                    <button type="button" id="submit-keatasan" class="btn btn-neutral btn-sm">Submit Keatasan</button>
-                                @endif
-                            </div>
+                            @if (!$kertas_kerjas->first()?->lha->action == 'tindaklanjut_ok')
+                                <div class="flex flex-row justify-end space-x-2">
+                                    @if ($kertas_kerjas->first()?->lha->tindakLanjutLha?->status == 'diajukan')
+                                    @else
+                                        <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                                    @endif
+                                    @if ($kertas_kerjas->first()?->lha->tindakLanjutLha?->status != 'diajukan')
+                                        <button type="button" id="submit-keatasan" class="btn btn-neutral btn-sm">Submit
+                                            Keatasan</button>
+                                    @endif
+                                </div>
+                            @endif
                         @else
-                            <button class="btn btn-success float-end mt-3">Kirim Tindak Lanjut</button>
+                            <button class="btn btn-success float-end mt-3 btn-sm">Simpan Tindak Lanjut</button>
                         @endif
                     </form>
                 </div>
@@ -135,9 +145,9 @@
 @endsection
 @push('script')
     <script>
-        $('#submit-keatasan').on('click',function(){
-            if(confirm('Apakah Yakin Ingin Mengirim KeAtasan ?')){
-                window.location.href="{{route('tindakLanjut.submitKeatasan',$id_tindak_lanjut)}}"
+        $('#submit-keatasan').on('click', function() {
+            if (confirm('Apakah Yakin Ingin Mengirim KeAtasan ?')) {
+                window.location.href = "{{ route('tindakLanjut.submitKeatasan', $id_tindak_lanjut) }}"
             }
         })
     </script>

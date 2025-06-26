@@ -46,8 +46,13 @@
 
                             <a href="{{ route('tindakLanjut.create', $pka->kertasKerja->first()->id_lha) }}" class="btn btn-sm ">Tindak Lanjut</a>
 
+                            @if ($pka->kertasKerja->first()?->lha?->tindakLanjutLha?->status=='diajukan')
+                                <a href="{{route('tindakLanjut.reviewTindakLanjut',$pka->kertasKerja->first()?->lha->tindakLanjutLha->id)}}" class="btn btn-sm btn-neutral">Review Tindak Lanjut</a>
+                            @endif
 
-                            <a href="{{route('tindakLanjut.reviewTindakLanjut',$pka->kertasKerja->first()?->lha->tindakLanjutLha->id)}}" class="btn btn-sm btn-neutral">Review Tindak Lanjut</a>
+                            @if ($pka->kertasKerja->first()?->lha?->action=="tindaklanjut_ok")
+                                 <a href="{{route('tindakLanjut.reviewTindakLanjut',$pka->kertasKerja->first()?->lha->tindakLanjutLha->id)}}" class="btn btn-sm btn-neutral">Final Review</a>
+                            @endif
                         </td>
                     </tr>
                 @empty
