@@ -1,7 +1,7 @@
 @extends('admin.layout')
 @push('style')
 @endpush
-@section('title', 'Review Tindak Lanjut')
+@section('title', 'Review Final Tindak Lanjut')
 @section('tindaklanjut-active', 'menu-active')
 @section('content')
     @if ($errors->any())
@@ -105,14 +105,14 @@
                     </tbody>
                 </table>
                 <hr>
-                <form action="{{ route('tindakLanjut.submitReview') }}" method="post">
+                <form action="{{ route('tindakLanjut.submitFinalReview') }}" method="post">
                     @csrf
                     <input type="hidden" name="id_tindak_lanjut" value="{{ $tindak_lanjut_lha->id }}">
                     <fieldset class="fieldset w-full">
                         <legend class="fieldset-legend text-base">Review</legend>
                         <select name="status" class="select w-full" id="">
-                            <option selected disabled>Pilih Review</option>
-                            <option value="disetujui">Disetujui</option>
+                            <option selected disabled>Pilih Final Review</option>
+                            <option value="disetujui">Sepakat</option>
                             <option value="revisi">Revisi</option>
                         </select>
                     </fieldset>

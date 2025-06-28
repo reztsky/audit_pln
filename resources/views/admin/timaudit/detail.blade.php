@@ -44,7 +44,9 @@
 @push('script')
     <script>
         function setTbodyTim(data) {
-            var tbody = ``
+            var role= @json(Auth::user()->roles->first()->name);
+            var role_can_access=['Atasan Auditee','Super Admin']
+            var tbody = ``;
             data.forEach(row => {
                 tbody += `<tr>
                         <td>${row.pegawai.nip}</td>
@@ -52,7 +54,7 @@
                         <td>${row.pegawai.jabatan}</td>
                         <td>
                             <label class="label">
-                                <input type="checkbox" ${row.is_pic==1 ? 'checked="checked"' : ''} data-id="${row.id}" class="toggle toggle-success toggle-pic" />
+                                <input type="checkbox" ${row.is_pic==1 ? 'checked="checked"' : ''} ${role_can_access.includes(role) ? '' : 'disabled'} data-id="${row.id}" class="toggle toggle-success toggle-pic" />
                             </label>
                         </td>
                     </tr>`

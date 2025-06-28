@@ -21,7 +21,7 @@
         </div>
     @endif
     <div class="card">
-        <div class="card-body shadow">
+        <div class="card-body shadow bg-base-100">
             <div class="flex flex-row flex-wrap">
                 <div class="w-5/12">
                     @forelse ($kertas_kerjas as $kertas_kerja)
@@ -106,11 +106,11 @@
                             <legend class="fieldset-legend text-base">Penjelasan Tindak Lanjut</legend>
                             <textarea name="tindak_lanjut" id=""
                                 {{ in_array($kertas_kerjas->first()?->lha->tindakLanjutLha?->status, ['diajukan', 'disetujui']) ? 'readonly' : '' }}
-                                class="textarea h-64 w-full required" required placeholder="Penjelasan Tindak Lanjut">{{ $kertas_kerjas->first()?->lha->tindakLanjutLha?->tindak_lanjut ?? '' }}</textarea>
+                                class="textarea h-64 w-full validation" required placeholder="Penjelasan Tindak Lanjut">{{ $kertas_kerjas->first()?->lha->tindakLanjutLha?->tindak_lanjut ?? '' }}</textarea>
                         </fieldset>
                         <fieldset class="fieldset w-full">
                             <legend class="fieldset-legend text-base">Upload Bukti Dukung Perbaikan</legend>
-                            <input type="file" class="file-input w-full required" required name="eviden_path"
+                            <input type="file" class="file-input w-full validation" required name="eviden_path"
                                 {{ in_array($kertas_kerjas->first()?->lha->tindakLanjutLha?->status, ['diajukan', 'disetujui']) ? 'disabled' : '' }} />
                             <label class="label">Max size 2MB</label>
                             <label class="label">Jenis File .jpg / .jpeg / .pdf</label>
@@ -120,22 +120,23 @@
                             {{ $kertas_kerjas->first()?->lha->tindakLanjutLha?->eviden_path ? 'Lihat Dokumen' : '' }}
                         </a>
 
-                        @if ($is_ada_tindak_lanjut)
-                            @if (!$kertas_kerjas->first()?->lha->action == 'tindaklanjut_ok')
-                                <div class="flex flex-row justify-end space-x-2">
-                                    @if ($kertas_kerjas->first()?->lha->tindakLanjutLha?->status == 'diajukan')
-                                    @else
-                                        <button type="submit" class="btn btn-primary btn-sm">Update</button>
-                                    @endif
-                                    @if ($kertas_kerjas->first()?->lha->tindakLanjutLha?->status != 'diajukan')
-                                        <button type="button" id="submit-keatasan" class="btn btn-neutral btn-sm">Submit
-                                            Keatasan</button>
-                                    @endif
-                                </div>
+                        @hasanyrole(['Staf Auditee', 'Super Admin'])
+                            @if ($is_ada_tindak_lanjut)
+                                @if (in_array($kertas_kerjas->first()?->lha->action, ['disetujui', 'ditindaklanjuti', 'revisi_tindaklanjut']))
+                                    <div class="flex flex-row justify-end space-x-2">
+                                        @if (in_array($kertas_kerjas->first()?->lha->tindakLanjutLha?->status, ['draft', 'revisi']))
+                                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                                        @endif
+                                        @if ($kertas_kerjas->first()?->lha->tindakLanjutLha?->status != 'diajukan')
+                                            <button type="button" id="submit-keatasan" class="btn btn-neutral btn-sm">Submit
+                                                Keatasan</button>
+                                        @endif
+                                    </div>
+                                @endif
+                            @else
+                                <button class="btn btn-success float-end mt-3 btn-sm">Simpan Tindak Lanjut</button>
                             @endif
-                        @else
-                            <button class="btn btn-success float-end mt-3 btn-sm">Simpan Tindak Lanjut</button>
-                        @endif
+                        @endhasanyrole
                     </form>
                 </div>
             </div>

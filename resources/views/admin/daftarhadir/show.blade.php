@@ -1,5 +1,5 @@
-<dialog class="modal" id="daftarHadirShow">
-    <div class="modal-box md:modal-middle modal-bottom overflow-visible max-w-2xl">
+<dialog class="modal modal-middle" id="daftarHadirShow">
+    <div class="modal-box">
         <form method="dialog">
             <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>

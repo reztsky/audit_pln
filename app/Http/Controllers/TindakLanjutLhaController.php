@@ -16,7 +16,7 @@ class TindakLanjutLhaController extends Controller
     public function index()
     {
         $pkas = Pka::with(['suratTugas', 'kertasKerja', 'kertasKerja.lha.tindakLanjutLha'])->whereHas('kertasKerja.lha', function ($q) {
-            return $q->whereIn('action',['disetujui','ditindaklanjuti','revisi_tindaklanjut','tindaklanjut_ok']);
+            return $q->whereIn('action', ['disetujui', 'ditindaklanjuti', 'revisi_tindaklanjut', 'tindaklanjut_ok','selesai']);
         })->paginate(10);
         return view('admin.tindaklanjut.index', compact('pkas'));
     }
@@ -47,8 +47,8 @@ class TindakLanjutLhaController extends Controller
             'status' => 'draft'
         ]);
 
-        $lha = Lha::where('lha_id', $request->id_lha)->update([
-            'action'=>'ditindaklanjuti'
+        $lha = Lha::where('id', $request->id_lha)->update([
+            'action' => 'ditindaklanjuti'
         ]);
 
         $log_lha = LhaLog::create([
@@ -104,38 +104,73 @@ class TindakLanjutLhaController extends Controller
         return redirect()->route('tindakLanjut.index')->with('notifikasi_gagal', 'Gagal Mengirim Keatasan');
     }
 
-    public function reviewTindakLanjut($id){
-        $tindak_lanjut_lha=TindakLanjutLha::with(['lha','lha.kertasKerja.pka.suratTugas'])->findOrFail($id);
-        return view('admin.tindaklanjut.review',compact('tindak_lanjut_lha'));
+    public function reviewTindakLanjut($id)
+    {
+        $tindak_lanjut_lha = TindakLanjutLha::with(['lha', 'lha.kertasKerja.pka.suratTugas'])->findOrFail($id);
+        return view('admin.tindaklanjut.review', compact('tindak_lanjut_lha'));
     }
 
-    public function submitReview(Request $request){
+    public function submitReview(Request $request)
+    {
         $request->validate([
-            'id_tindak_lanjut'=>'required|numeric|exists:tindak_lanjut_lhas,id',
-            'status'=>'required',
-            'catatan'=>'nullable'
+            'id_tindak_lanjut' => 'required|numeric|exists:tindak_lanjut_lhas,id',
+            'status' => 'required',
+            'catatan' => 'nullable'
         ]);
 
-        $tindak_lanjut_lha=TindakLanjutLha::findOrFail($request->id_tindak_lanjut);
-        $tindak_lanjut_lha->status=$request->status;
+        $tindak_lanjut_lha = TindakLanjutLha::findOrFail($request->id_tindak_lanjut);
+        $tindak_lanjut_lha->status = $request->status;
         $tindak_lanjut_lha->save();
 
-        $lhaLog=LhaLog::create([
-            'lha_id'=>$tindak_lanjut_lha->id_lha,
-            'inserted_by'=>Auth::user()->id,
-            'action'=>$request->status=='revisi' ? 'revisi_tindaklanjut' : 'tindaklanjut_ok',
-            'catatan'=>$request->catatan,
+        $lhaLog = LhaLog::create([
+            'lha_id' => $tindak_lanjut_lha->id_lha,
+            'inserted_by' => Auth::user()->id,
+            'action' => $request->status == 'revisi' ? 'revisi_tindaklanjut' : 'tindaklanjut_ok',
+            'catatan' => $request->catatan,
         ]);
 
-        $lha=Lha::whereId($tindak_lanjut_lha->id_lha)->update([
-            'action'=>$request->status=='revisi' ? 'revisi_tindaklanjut' : 'tindaklanjut_ok'
+        $lha = Lha::whereId($tindak_lanjut_lha->id_lha)->update([
+            'action' => $request->status == 'revisi' ? 'revisi_tindaklanjut' : 'tindaklanjut_ok'
         ]);
 
         if ($tindak_lanjut_lha) {
             return redirect()->route('tindakLanjut.index')->with('notifikasi_sukses', 'Berhasil Mengirim Keatasan');
         }
         return redirect()->route('tindakLanjut.index')->with('notifikasi_gagal', 'Gagal Mengirim Keatasan');
+    }
 
+    public function reviewFinal($id)
+    {
+        $tindak_lanjut_lha = TindakLanjutLha::with(['lha', 'lha.kertasKerja.pka.suratTugas'])->findOrFail($id);
+        return view('admin.tindaklanjut.review_final', compact('tindak_lanjut_lha'));
+    }
+
+    public function submitFinalReview(Request $request) {
+         $request->validate([
+            'id_tindak_lanjut' => 'required|numeric|exists:tindak_lanjut_lhas,id',
+            'status' => 'required',
+            'catatan' => 'nullable'
+        ]);
+
+        $tindak_lanjut_lha = TindakLanjutLha::findOrFail($request->id_tindak_lanjut);
+        $tindak_lanjut_lha->status = $request->status;
+        $tindak_lanjut_lha->save();
+
+        $lhaLog = LhaLog::create([
+            'lha_id' => $tindak_lanjut_lha->id_lha,
+            'inserted_by' => Auth::user()->id,
+            'action' => $request->status == 'revisi' ? 'revisi_tindaklanjut' : 'selesai',
+            'catatan' => $request->catatan,
+        ]);
+
+        $lha = Lha::whereId($tindak_lanjut_lha->id_lha)->update([
+            'action' => $request->status == 'revisi' ? 'revisi_tindaklanjut' : 'selesai'
+        ]);
+
+        if ($tindak_lanjut_lha) {
+            return redirect()->route('tindakLanjut.index')->with('notifikasi_sukses', 'Berhasil Menyimpan Review');
+        }
+        return redirect()->route('tindakLanjut.index')->with('notifikasi_gagal', 'Gagal Menyimpan Review');
     }
 
 
@@ -148,8 +183,8 @@ class TindakLanjutLhaController extends Controller
 
     private function delete($file)
     {
-        if (Storage::disk('public')->exists('/public/tindak_lanjut/' . $file)) {
-            Storage::disk('public')->delete('/public/tindak_lanjut/' . $file);
+        if (Storage::disk('public')->exists('tindak_lanjut/' . $file)) {
+            Storage::disk('public')->delete('tindak_lanjut/' . $file);
         }
     }
 }

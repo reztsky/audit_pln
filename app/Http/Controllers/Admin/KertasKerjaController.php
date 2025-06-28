@@ -38,7 +38,7 @@ class KertasKerjaController extends Controller
     }
 
     public function show($idpka){
-        $kertas_kerjas=KertasKerja::with(['pka.suratTugas'])->findByPka($idpka)->get();
+        $kertas_kerjas=KertasKerja::with(['pka.suratTugas','lha'])->findByPka($idpka)->get();
         return response()->json([
             'data'=>$kertas_kerjas
         ],200);

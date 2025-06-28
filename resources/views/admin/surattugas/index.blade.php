@@ -2,9 +2,11 @@
 @section('title', 'Surat Tugas')
 @section('surattugas-active', 'menu-active')
 @section('content')
-    <div class="flex justify-end mb-5">
-        <button class="btn btn-sm btn-accent" onclick="create.showModal()">Tambah</button>
-    </div>
+    @hasanyrole(['Atasan Auditor','Super Admin'])
+        <div class="flex justify-end mb-5">
+            <button class="btn btn-sm btn-accent" onclick="create.showModal()">Tambah</button>
+        </div>
+    @endhasanyrole
     @if ($errors->any())
         <div class="alert alert-error my-5">
             <x-heroicon-o-exclamation-triangle class="w-5 h-5" />
@@ -25,6 +27,8 @@
                     <th>PIC Audit</th>
                     <th>Audit</th>
                     <th>Surat Tugas</th>
+                    <th>Daftar Hadir Closing</th>
+                    <th>Closing Meeting</th>
                     <th></th>
                 </tr>
             </thead>
@@ -49,6 +53,81 @@
                         </td>
                         <td>
 
+                            @if (in_array($surattugas->pka?->kertasKerja?->first()?->lha?->action, ['selesai']))
+                                @php
+                                    $daftar_hadir_closing = $surattugas->dokumenMeeting->firstWhere(
+                                        'jenis_dokumen',
+                                        'Daftar Hadir Closing',
+                                    );
+                                @endphp
+                                @if ($daftar_hadir_closing?->count() > 0)
+                                    <div class="tooltip tooltip-accent tooltip-left" data-tip="Lihat Document">
+                                        <a href="{{ asset('storage/dokumen_meeting/' . $daftar_hadir_closing->path_dokumen) }}"
+                                            target="_blank">
+                                            <button class="btn btn-ghost btn-xs"><x-heroicon-o-document-magnifying-glass
+                                                    class="w-5 h-5" /></button>
+                                        </a>
+                                    </div>
+                                    @hasanyrole(['Staf Auditor','Super Admin'])
+                                        <form action="{{ route('dokumenMeeting.delete', $daftar_hadir_closing->id) }}"
+                                            method="post" class="form-delete inline-block">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-xs btn-error text-white btn-delete"
+                                                data-id="{{ $daftar_hadir_closing->id }}">
+                                                <x-heroicon-o-trash class="w-5 h-5" />
+                                            </button>
+                                        </form>
+                                    @endhasanyrole
+                                @else
+                                    <div class="badge badge-soft badge-info">Dokumen Belum Diunggah</div>
+                                    @hasanyrole(['Staf Auditor','Super Admin'])
+                                        <button class="btn btn-sm btn-accent btn-upload"
+                                            onclick="uploadDokumenMeeting.showModal()" data-id="{{ $surattugas->id }}"
+                                            data-jenisdokumen="Daftar Hadir Closing">Upload</button>
+                                    @endhasanyrole
+                                @endif
+                            @else
+                                <div class="badge badge-soft badge-warning">Audit Belum Selesai</div>
+                            @endif
+                        </td>
+                        <td>
+                            @if (in_array($surattugas->pka?->kertasKerja?->first()?->lha?->action, ['selesai']))
+                                @php
+                                    $closing_meeting = $surattugas->dokumenMeeting->firstWhere(
+                                        'jenis_dokumen',
+                                        'Closing Meeting',
+                                    );
+                                @endphp
+                                @if ($closing_meeting?->count() > 0)
+                                    <div class="tooltip tooltip-accent tooltip-left" data-tip="Lihat Document">
+                                        <a href="{{ asset('storage/dokumen_meeting/' . $closing_meeting->path_dokumen) }}"
+                                            target="_blank">
+                                            <button class="btn btn-ghost btn-xs"><x-heroicon-o-document-magnifying-glass
+                                                    class="w-5 h-5" /></button>
+                                        </a>
+                                    </div>
+                                    @hasanyrole(['Staf Auditor','Super Admin'])
+                                        <form action="{{ route('dokumenMeeting.delete', $closing_meeting->id) }}"
+                                            method="post" class="form-delete inline-block">
+                                            @method('DELETE')
+                                            @csrf
+                                            <button type="submit" class="btn btn-xs btn-error text-white btn-delete"
+                                                data-id="{{ $closing_meeting->id }}"><x-heroicon-o-trash
+                                                    class="w-5 h-5" /></button>
+                                        </form>
+                                    @endhasanyrole
+                                @else
+                                    <div class="badge badge-soft badge-info">Dokumen Belum Diunggah</div>
+                                    @hasanyrole(['Staf Auditor','Super Admin'])
+                                        <button class="btn btn-sm btn-accent btn-upload"
+                                            onclick="uploadDokumenMeeting.showModal()" data-id="{{ $surattugas->id }}"
+                                            data-jenisdokumen="Closing Meeting">Upload</button>
+                                    @endhasanyrole
+                                @endif
+                            @else
+                                <div class="badge badge-soft badge-warning">Audit Belum Selesai</div>
+                            @endif
                         </td>
                     </tr>
                 @empty
@@ -107,4 +186,17 @@
             </form>
         </div>
     </dialog>
+
+    @include('admin.surattugas.upload_dokumen')
 @endsection
+
+@push('script')
+    <script>
+        $('.form-delete').on('submit', function(e) {
+            e.preventDefault()
+            if (confirm('Yakin Ingin Menghapus Dokumen ? ')) {
+                this.submit();
+            }
+        })
+    </script>
+@endpush

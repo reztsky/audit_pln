@@ -17,24 +17,33 @@ class LhaController extends Controller
 {
     public function index()
     {
-        $pkas = Pka::with(['suratTugas','kertasKerja.lha'])->paginate(10);
+        $pkas = Pka::with(['suratTugas', 'kertasKerja.lha'])->paginate(10);
         return view('admin.lha.index', compact('pkas'));
     }
 
     public function create($idpka)
     {
-        $pka = Pka::with(['lha','suratTugas'])->findOrfail($idpka);
+        $pka = Pka::with(['lha', 'suratTugas'])->findOrfail($idpka);
         $kertas_kerjas = KertasKerja::findByPka($idpka)->get();
         return view('admin.lha.create', compact('pka', 'kertas_kerjas'));
     }
 
     public function store(StoreLhaRequest $request)
     {
-        $validated = $request->validated();
-        $lha = Lha::create($validated);
-        $kertas_kerjas=KertasKerja::whereIn('id',$request->id_kertas_kerja)->update([
-            'id_lha'=>$lha->id
-        ]);
+        $kertas_kerjas = KertasKerja::whereIn('id', $request->id_kertas_kerja)->get();
+        
+        if ($kertas_kerjas->first()->id_lha != null) {
+            $lha = Lha::findOrFail($kertas_kerjas->first()->id_lha);
+            $lha->action = 'diajukan';
+            $lha->save();
+        } else {
+            $validated = $request->validated();
+            $lha = Lha::create($validated);
+            $kertas_kerjas = KertasKerja::whereIn('id', $request->id_kertas_kerja)->update([
+                'id_lha' => $lha->id
+            ]);
+        }
+
         $lha_log = LhaLog::create([
             'lha_id' => $lha->id,
             'inserted_by' => Auth::user()->id,
@@ -47,20 +56,22 @@ class LhaController extends Controller
         return redirect()->route('lha.index')->with('notifikasi_gagal', 'Gagal Menambahkan Data');
     }
 
-    public function review($idpka){
-        $kertas_kerjas=KertasKerja::with(['pka'])->findByPka($idpka)->lhaNotNull()->get();
-        return view('admin.lha.review',compact('kertas_kerjas'));
+    public function review($idpka)
+    {
+        $kertas_kerjas = KertasKerja::with(['pka'])->findByPka($idpka)->lhaNotNull()->get();
+        return view('admin.lha.review', compact('kertas_kerjas'));
     }
 
-    public function accAtasan(Request $request){
-        $lha=Lha::whereId($request->lha_id)->update([
-            'action'=>$request->action,
+    public function accAtasan(Request $request)
+    {
+        $lha = Lha::whereId($request->lha_id)->update([
+            'action' => $request->action,
         ]);
         $lha_log = LhaLog::create([
             'lha_id' => $request->lha_id,
             'inserted_by' => Auth::user()->id,
             'action' => $request->action,
-            'catatan'=>$request->catatan
+            'catatan' => $request->catatan
         ]);
 
         if ($lha) {
@@ -88,10 +99,10 @@ class LhaController extends Controller
 
     public function edit($id)
     {
-        $lha = Lha::with(['pka','kertasKerja'])->findOrFail($id);
+        $lha = Lha::with(['pka', 'kertasKerja'])->findOrFail($id);
         $pka = Pka::with('suratTugas')->findOrfail($lha->id_pka);
         $kertas_kerjas = KertasKerja::findByPka($lha->id_pka)->get();
-        return view('admin.lha.edit',compact('lha','pka','kertas_kerjas'));
+        return view('admin.lha.edit', compact('lha', 'pka', 'kertas_kerjas'));
     }
 
     public function detail($id)
@@ -109,12 +120,21 @@ class LhaController extends Controller
         ], 200);
     }
 
-    public function update(UpdateLhaRequest $request,$id){
-        $lha=Lha::findOrFail($id);
+    public function update(UpdateLhaRequest $request, $id)
+    {
+        $lha = Lha::findOrFail($id);
         $lha->update($request->validated());
         if ($lha) {
             return redirect()->route('lha.index')->with('notifikasi_sukses', 'Berhasil Mengupdate LHA');
         }
         return redirect()->route('lha.index')->with('notifikasi_gagal', 'Gagal Mengupdate LHA');
+    }
+
+    public function lhaHistory($id)
+    {
+        $log = LhaLog::with(['lha', 'user'])->findByLha($id)->orderBy('created_at', 'asc')->get();
+        return response()->json([
+            'data' => $log
+        ], 200);
     }
 }

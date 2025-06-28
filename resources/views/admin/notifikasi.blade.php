@@ -13,3 +13,13 @@
         </div>
     </div>
 @endif
+
+@push('script')
+    <script>
+        $(document).ready(function(){
+            setTimeout(() => {
+                $('.toast').hide()
+            }, 3000);
+        })
+    </script>
+@endpush

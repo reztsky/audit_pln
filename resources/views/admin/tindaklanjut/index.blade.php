@@ -33,7 +33,8 @@
                                 <div>
                                     <p class="text-slate-800"><span
                                             class="font-bold">{{ $pka->surattugas->judul_audit }}</span> -
-                                        {{ $pka->surattugas->lokasi_audit }}
+                                        {{ $pka->surattugas->lokasi_audit }} -
+                                        {{ $pka->kertasKerja->first()?->lha?->formated_action }}
                                     <p class="text-slate-500 text-xs">
                                         {{ $pka->surattugas->tanggal_audit->translatedFormat('d F Y') }}
                                     </p>
@@ -43,16 +44,22 @@
                         <td>
                             <a class="btn btn-primary btn-sm" href="{{ route('lha.review', $pka->id) }}"><x-heroicon-o-eye
                                     class="w-4 h-4" />LHA</a>
+                            <a href="{{ route('tindakLanjut.create', $pka->kertasKerja->first()->id_lha) }}"
+                                class="btn btn-sm ">Tindak Lanjut</a>
 
-                            <a href="{{ route('tindakLanjut.create', $pka->kertasKerja->first()->id_lha) }}" class="btn btn-sm ">Tindak Lanjut</a>
+                            @hasanyrole(['Atasan Auditee','Super Admin'])
+                                @if ($pka->kertasKerja->first()?->lha?->tindakLanjutLha?->status == 'diajukan')
+                                    <a href="{{ route('tindakLanjut.reviewTindakLanjut', $pka->kertasKerja->first()?->lha->tindakLanjutLha->id) }}"
+                                        class="btn btn-sm btn-neutral">Review Tindak Lanjut</a>
+                                @endif
+                            @endhasanyrole
 
-                            @if ($pka->kertasKerja->first()?->lha?->tindakLanjutLha?->status=='diajukan')
-                                <a href="{{route('tindakLanjut.reviewTindakLanjut',$pka->kertasKerja->first()?->lha->tindakLanjutLha->id)}}" class="btn btn-sm btn-neutral">Review Tindak Lanjut</a>
-                            @endif
-
-                            @if ($pka->kertasKerja->first()?->lha?->action=="tindaklanjut_ok")
-                                 <a href="{{route('tindakLanjut.reviewTindakLanjut',$pka->kertasKerja->first()?->lha->tindakLanjutLha->id)}}" class="btn btn-sm btn-neutral">Final Review</a>
-                            @endif
+                            @hasanyrole(['Staf Auditor','Super Admin'])
+                                @if ($pka->kertasKerja->first()?->lha?->action == 'tindaklanjut_ok')
+                                    <a href="{{ route('tindakLanjut.reviewFinal', $pka->kertasKerja->first()?->lha->tindakLanjutLha->id) }}"
+                                        class="btn btn-sm btn-neutral">Final Review</a>
+                                @endif
+                            @endhasanyrole
                         </td>
                     </tr>
                 @empty

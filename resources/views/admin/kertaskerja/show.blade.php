@@ -1,17 +1,18 @@
-<dialog class="modal" id="showKertasKerja">
-    <div class="modal-box  md:modal-middle modal-bottom overflow-visible max-w-3xl">
+<dialog class="modal md:modal-middle modal-bottom" id="showKertasKerja">
+    <div class="modal-box md:max-w-3xl">
         <form method="dialog">
             <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>
         <h3 class="text-lg font-bold mb-5 w-full text-left">Kertas Kerja <span id="judul-audit"></span></h3>
-        <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 w-full">
-            <form action="{{ route('lha.store') }}" method="post">
+        <form action="{{ route('lha.store') }}" method="post">
+            <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 w-full">
                 @csrf
-                <table class="table" id="table-kertas-kerja">
+                <table class="table w-full" id="table-kertas-kerja">
                     <!-- head -->
                     <thead>
                         <tr>
                             <th></th>
+                            <th>Status</th>
                             <th>Kontrol</th>
                             <th>Kategori Temuan</th>
                             <th>Tanggal</th>
@@ -42,10 +43,11 @@
 
                     </tbody>
                 </table>
-                <div class="flex justify-center space-y-3">
-                    <div class="md:mr-3">
-                        <a class="btn btn-sm btn-accent" id="btn-create"
-                            href="{{ route('kertasKerja.create', $pka->id) }}">
+            </div>
+            <div class="flex justify-center mt-3">
+                @hasanyrole(['Staf Auditor','Super Admin'])
+                    <div class="mr-3">
+                        <a class="btn btn-sm btn-accent" id="btn-create" href="{{ route('kertasKerja.create', $pka->id) }}">
                             <x-heroicon-o-folder-plus class="w-5 h-5" />
                             Tambah Kertas Kerja
                         </a>
@@ -54,25 +56,35 @@
                         <button class="btn btn-sm btn-primary hidden submit-lha" type="submit">Submit Ke
                             Atasan</button>
                     </div>
-                </div>
-            </form>
-        </div>
+                @endhasanyrole
+            </div>
+        </form>
     </div>
 </dialog>
 @push('script')
     <script>
         function setTbodyKertasKerja(data) {
             var tbody = ``
+            var role=@json(Auth::user()->roles->first()->name);
+            var role_can_access=['Staf Auditor','Super Admin']
+            const is_bisadiubah = [null, "draft", "revisi"]
             if (data.length < 1) return tbody = `<tr><td colspan="9" class="text-center">No Found Record</td></tr>`;
+
             data.forEach(row => {
                 var url = "{{ route('kertasKerja.detail', ':id') }}"
-                var url_edit="{{route('kertasKerja.edit',':id')}}"
-                url_edit=url_edit.replace(':id',row.id)
+                var url_edit = "{{ route('kertasKerja.edit', ':id') }}"
+                url_edit = url_edit.replace(':id', row.id)
                 url = url.replace(':id', row.id)
+
                 tbody += `<tr>
-                        <td>
-                            <input type="checkbox" ${row.id_lha ? 'checked' : ''} name="id_kertas_kerja[]" id="id-kertas-kerja-${row.id}" class="checkbox-lha cursor-pointer" value="${row.id}">
-                        </td>
+                        <td>`
+                if (is_bisadiubah.includes(row.lha?.action ?? null) && role_can_access.includes(role)) {
+                    tbody +=
+                        `<input type="checkbox" ${(row.id_lha && row.lha?.action!='revisi') ? 'checked' : ''} name="id_kertas_kerja[]" id="id-kertas-kerja-${row.id}" class="checkbox-lha cursor-pointer" value="${row.id}">`
+                }
+
+                tbody += `</td>
+                        <td>${row.lha?.formatedAction ?? '-'}</td>
                         <td>${row.kontrol}</td>
                         <td>${row.kategori_temuan}</td>
                         <td>${row.tanggal_formatted}</td>
@@ -81,12 +93,13 @@
                         </td>
                         <td>
                             <div class="space-y-2">
-                            <a class="btn btn-accent btn-xs mb-0" href="${url}">Detail</a>
-                            <a class="btn btn-danger btn-xs mb-0" href="${url_edit}">Edit</a>
-                            <button class="btn btn-error btn-xs btn-delete-kertas-kerja">Hapus</button>
-                            </div>
-                        </td>
-                    </tr>`
+                            <a class="btn btn-accent btn-xs mb-0" href="${url}">Detail</a>`
+                if (is_bisadiubah.includes(row.lha?.action ?? null) && role_can_access.includes(role)) {
+                    tbody +=
+                        `<a class="btn btn-danger btn-xs mb-0" href="${url_edit}">Edit</a>
+                            <button class="btn btn-error btn-xs btn-delete-kertas-kerja">Hapus</button>`
+                }
+                tbody += `</div></td></tr>`
             });
             return tbody
         }

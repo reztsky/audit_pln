@@ -22,4 +22,12 @@ class SuratTugas extends Model
     public function pegawai(){
         return $this->belongsTo(Pegawai::class,'pic_id_pegawai','id');
     }
+
+    public function pka(){
+        return $this->hasOne(Pka::class,'id_surat_tugas','id');
+    }
+
+    public function dokumenMeeting(){
+        return $this->hasMany(DokumenMeeting::class,'id_surat_tugas','id');
+    }
 }

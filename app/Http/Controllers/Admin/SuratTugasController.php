@@ -12,7 +12,7 @@ class SuratTugasController extends Controller
 {
     public function index()
     {
-        $surattugass = SuratTugas::with('pegawai')->paginate(10);
+        $surattugass = SuratTugas::with(['pegawai','dokumenMeeting','pka.kertasKerja.lha'])->paginate(10);
         $pegawais = Pegawai::stafAuditor()->get();
         return view('admin.surattugas.index', compact('surattugass', 'pegawais'));
     }

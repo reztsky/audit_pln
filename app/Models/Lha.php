@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Lha extends Model
 {
@@ -17,6 +18,10 @@ class Lha extends Model
         'inserted_by',
         'id_kertas_kerja',
         'action'
+    ];
+
+    protected $appends=[
+        'formatedAction'
     ];
 
     public function LhaLog(){
@@ -43,5 +48,9 @@ class Lha extends Model
     public function scopeStatus($query, $status)
     {
         return $query->whereIn('status', $status);
+    }
+
+    public function getFormatedActionAttribute(){
+        return Str::title(str_replace('_', ' ', $this->action));
     }
 }

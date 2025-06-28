@@ -16,6 +16,10 @@ class Pegawai extends Model
         return $query->whereJabatan('Staf Auditor');
     }
 
+    public function user(){
+        return $this->hasOne(PegawaiHasUser::class,'id_pegawai','id');
+    }
+
     public function scopeTimAudit($query){
         return $query->whereIn('jabatan',[
             'Atasan Auditee',

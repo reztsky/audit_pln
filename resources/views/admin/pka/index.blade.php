@@ -5,9 +5,11 @@
 @section('title', 'PKA')
 @section('pka-active', 'menu-active')
 @section('content')
-    <div class="flex justify-end mb-5">
-        <button class="btn btn-sm btn-accent" onclick="create.showModal()">Tambah</button>
-    </div>
+    @hasanyrole(['Staf Auditor','Super Admin'])
+        <div class="flex justify-end mb-5">
+            <button class="btn btn-sm btn-accent" onclick="create.showModal()">Tambah</button>
+        </div>
+    @endhasanyrole
     @if ($errors->any())
         <div class="alert alert-error my-5">
             <x-heroicon-o-exclamation-triangle class="w-5 h-5" />
@@ -54,16 +56,35 @@
                                     <x-heroicon-o-tag class="w-5 h-5" />Lihat Tim
                                 </button>
                             @else
-                                <button class="btn btn-soft btn-sm btn-accent btn-tambah-tim" onclick="storeTim.showModal()"
-                                    data-id="{{ $pka->id }}"><x-heroicon-o-user-plus class="w-5 h-5" />Tambah
-                                    Tim</button>
+                                @hasanyrole(['Atasan Auditor','Super Admin'])
+                                    <div class="badge badge-soft badge-warning">Belum Ditambahkan</div>
+                                @endhasanyrole
+                                @hasanyrole(['Staf Auditor','Super Admin'])
+                                    <button class="btn btn-soft btn-sm btn-accent btn-tambah-tim" onclick="storeTim.showModal()"
+                                        data-id="{{ $pka->id }}"><x-heroicon-o-user-plus class="w-5 h-5" />Tambah
+                                        Tim</button>
+                                @endhasanyrole
                             @endif
                         </td>
                         <td>
-                            <button class="btn btn-soft btn-sm btn-info {{ $pka->daftar_hadir_count >= 1 ? 'btn-daftar-hadir-show' : 'btn-daftar-hadir' }}" data-id="{{ $pka->id }}"
-                                onclick="{{ $pka->daftar_hadir_count >= 1 ? 'daftarHadirShow.showModal()' : 'daftarHadirCreate.showModal()' }}">
-                                <x-heroicon-o-document-check class="w-5 h-5" /> {{ $pka->daftar_hadir_count >= 1 ? 'Lihat' : 'Upload' }}
-                            </button>
+                            @if ($pka->daftar_hadir_count >= 1)
+                                <button class="btn btn-soft btn-sm btn-info btn-daftar-hadir-show }}"
+                                    data-id="{{ $pka->id }}" onclick="daftarHadirShow.showModal()">
+                                    <x-heroicon-o-document-check class="w-5 h-5" />
+                                    Lihat
+                                </button>
+                            @else
+                                @hasanyrole(['Atasan Auditor','Super Admin'])
+                                    <div class="badge badge-soft badge-info">Belum Ada Daftar Hadir</div>
+                                @endhasanyrole
+                                @hasanyrole(['Staf Auditor','Super Admin'])
+                                    <button class="btn btn-soft btn-sm btn-info btn-daftar-hadir }}"
+                                        data-id="{{ $pka->id }}" onclick="daftarHadirCreate.showModal()">
+                                        <x-heroicon-o-document-check class="w-5 h-5" />
+                                        Upload
+                                    </button>
+                                @endhasanyrole
+                            @endif
                         </td>
                         <td></td>
                     </tr>
@@ -92,7 +113,7 @@
             var placeholder = $(this).attr('placeholder') || ''; // fallback jika tidak ada placeholder
             $(this).summernote({
                 placeholder: placeholder,
-                height: 120,
+                height: 250,
             });
         });
     </script>

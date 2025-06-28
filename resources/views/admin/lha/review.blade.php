@@ -13,8 +13,8 @@
         </div>
     @endif
     <div class="flex flex-row flex-wrap">
-        @forelse ($kertas_kerjas as $kertas_kerja)
-            <div class="md:w-6/12 w-12/12 p-3">
+        <div class="md:w-6/12 w-12/12 p-3">
+            @forelse ($kertas_kerjas as $kertas_kerja)
                 <div class="card bg-base-100 shadow-md">
                     <div class="card-body space-y-4">
                         {{-- PKA --}}
@@ -85,41 +85,54 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        @empty
-        @endforelse
-    </div>
-    @if (in_array($kertas_kerjas->first()?->lha?->action,['draft','diajukan','revisi']))
-        <div class="flex flex-row flex-wrap gap-3">
-            <div class="card-body">
-                <form method="POST" action="{{ route('lha.accAtasan') }}">
-                    @csrf
-                    <input type="hidden" name="lha_id" value="{{ $kertas_kerjas->first()->id_lha }}">
-                    <div class="form-control mb-4">
-                        <label class="label font-semibold">Tanggapan</label>
-                        <select name="action" class="select select-bordered w-full" required>
-                            <option value="">-- Pilih Tindakan --</option>
-                            <option value="disetujui"
-                                {{ $kertas_kerjas->first()->lha->action == 'disetujui' ? 'selected' : '' }}>✅ Setujui
-                            </option>
-                            <option value="revisi" {{ $kertas_kerjas->first()->lha->action == 'revisi' ? 'selected' : '' }}>
-                                ✏️ Minta Revisi</option>
-                        </select>
-                    </div>
-
-                    <div class="form-control mb-6">
-                        <label class="label font-semibold">Komentar (Opsional)</label>
-                        <textarea name="catatan" class="textarea textarea-bordered w-full" rows="4"
-                            placeholder="Tulis komentar jika perlu...">{{ old('catatan') }}</textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn-success w-full">
-                        Kirim Review
-                    </button>
-                </form>
-            </div>
+            @empty
+            @endforelse
         </div>
-    @endif
+        @hasanyrole(['Atasan Auditor','Super Admin'])
+            <div class="md:w-6/12 w-12/12">
+                @if (in_array($kertas_kerjas->first()?->lha?->action, ['draft', 'diajukan', 'revisi']))
+                    <div class="flex flex-row flex-wrap gap-3">
+                        <div class="card-body">
+                            <form method="POST" action="{{ route('lha.accAtasan') }}">
+                                @csrf
+                                <input type="hidden" name="lha_id" value="{{ $kertas_kerjas->first()->id_lha }}">
+                                <div class="form-control mb-4">
+                                    <label class="label font-semibold">Tanggapan</label>
+                                    <select name="action" class="select select-bordered w-full" required>
+                                        <option value="">-- Pilih Tindakan --</option>
+                                        <option value="disetujui"
+                                            {{ $kertas_kerjas->first()->lha->action == 'disetujui' ? 'selected' : '' }}>✅
+                                            Setujui
+                                        </option>
+                                        <option value="revisi"
+                                            {{ $kertas_kerjas->first()->lha->action == 'revisi' ? 'selected' : '' }}>
+                                            ✏️ Minta Revisi</option>
+                                    </select>
+                                </div>
+                                <div class="form-control mb-6">
+                                    <label class="label font-semibold">Komentar (Opsional)</label>
+                                    <textarea name="catatan" class="textarea textarea-bordered w-full" rows="4"
+                                        placeholder="Tulis komentar jika perlu...">{{ old('catatan')  }}</textarea>
+                                </div>
+
+                                @if ($kertas_kerjas->first()?->lha?->action == 'revisi')
+                                    <button type="button" disabled class="btn btn-success w-full">
+                                        Sedang Direvisi
+                                    </button>
+                                @else
+                                    <button type="submit" class="btn btn-success w-full">
+                                        Kirim Review
+                                    </button>
+                                @endif
+                            </form>
+                        </div>
+                    </div>
+                @endif
+            </div>
+        @endhasanyrole
+
+    </div>
+
 
     <div class="pt-6 flex flex-row justify-end gap-3">
         <a href="{{ route('lha.index') }}" class="btn btn-neutral">

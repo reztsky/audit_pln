@@ -46,4 +46,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function hasPegawai(){
+        return $this->hasOne(PegawaiHasUser::class,'id_user','id');
+    }
 }

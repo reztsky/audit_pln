@@ -30,7 +30,7 @@
                                 <div>
                                     <p class="text-slate-800"><span
                                             class="font-bold">{{ $pka->surattugas->judul_audit }}</span> -
-                                        {{ $pka->surattugas->lokasi_audit }}  -  {{$pka->kertasKerja->first()->lha?->action}}</p>
+                                        {{ $pka->surattugas->lokasi_audit }}  -  {{$pka->kertasKerja->first()?->lha?->formated_action}}</p>
                                     <p class="text-slate-500 text-xs">
                                         {{ $pka->surattugas->tanggal_audit->translatedFormat('d F Y') }}
                                     </p>
@@ -38,8 +38,9 @@
                             </div>
                         </td>
                         <td>
-                            @if ($pka->kertasKerja->first()->id_lha!=null)
-                            <a class="btn btn-primary btn-sm" href="{{route("lha.review",$pka->id)}}"><x-heroicon-o-eye class="w-4 h-4"/>LHA</a>
+                            @if ($pka->kertasKerja->first()?->id_lha!=null)
+                                <a class="btn btn-primary btn-sm" href="{{route("lha.review",$pka->id)}}"><x-heroicon-o-eye class="w-4 h-4"/>LHA</a>
+                                <button class="btn btn-neutral btn-sm btn-history" onclick="historyLha.showModal()" data-id="{{ $pka->kertasKerja->first()?->id_lha }}"><x-heroicon-o-clock class="w-4 h-4"/>History LHA</label>
                             @else
                                 LHA Belum Ditambahkan
                             @endif
@@ -55,4 +56,5 @@
         </div>
     </div>
     @include('admin.lha.detail')
+    @include('admin.lha.history')
 @endsection
