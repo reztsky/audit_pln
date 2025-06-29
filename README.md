@@ -21,7 +21,8 @@ Untuk Skripsi
 7. type : php artisan key:generate
 8. type : php artisan migrate
 9. type : php artisan storage:link
-10. to running type : php artisan serve
+10. type : php artisan db:seed
+11. to running type : php artisan serve
 
 ## Author
 Sultan Aulia Alfarizki [sultaninot@gmail.com](mailto:sultaninot@gmail.com)
